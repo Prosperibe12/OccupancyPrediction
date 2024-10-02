@@ -1,0 +1,6 @@
+venv
+__pycache__
+mlruns
+mlartifacts 
+classification_report.txt 
+confusion_matrix.png

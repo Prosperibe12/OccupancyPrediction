@@ -1,0 +1,4 @@
+name: OccupancyCountProject
+
+docker_env:
+  image: mlflow-occupancy-count
