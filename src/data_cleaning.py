@@ -57,7 +57,7 @@ class DataNormalizationStrategy(DataPreprocessingStrategy):
             data_size = len(data)
 
             # select features 
-            x = data[:,1:-1]
+            x = data[:,0:-2]
             y = tf.expand_dims(data[:,-1], axis=1)
 
             # train data subset

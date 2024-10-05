@@ -22,7 +22,7 @@ if __name__ == "__main__":
         config
     )
     # deployment pipeline
-    dp.continuos_deployment_pipeline(acc,run,config)
+    dp.continuous_deployment_pipeline(acc,run,config)
     # inference pipeline 
     output  = ip.make_inference(random.choice(df), config)
     print("Output", output)
