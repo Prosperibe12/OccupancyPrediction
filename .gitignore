@@ -3,4 +3,5 @@ __pycache__
 mlruns
 mlartifacts 
 classification_report.txt 
-confusion_matrix.png
+confusion_matrix.png 
+.env

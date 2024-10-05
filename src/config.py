@@ -13,7 +13,7 @@ class Configparams:
         "lr": 0.01,
         "epoch": 10,
     }
-    experiment_name: str = "ProjectOccupancy02/10"
+    experiment_name: str = "ProjectOccupancy"
     tracking_uri: str = "http://127.0.0.1:5000"
     min_accuracy: float = 0.93 
-    registered_model_name: str = "MLOccupancy"
+    registered_model_name: str = "occupancymodel"

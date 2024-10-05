@@ -4,7 +4,9 @@ COPY . /app
 
 WORKDIR  /app 
 
-RUN python -m venv venv 
-RUN  source/bin/activate 
-RUN  pip install -r requirements.txt 
-CMD [ "executable" ]
+RUN python3 -m venv /opt/venv 
+
+RUN /opt/venv/bin/pip install pip --upgrade && \
+    /opt/venv/bin/pip install -r requirements.txt && chmod +x entrypoint.sh
+
+CMD ["/app/entrypoint.sh"]

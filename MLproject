@@ -2,3 +2,7 @@ name: OccupancyCountProject
 
 docker_env:
   image: mlflow-occupancy-count
+
+entry_point:
+  main:
+    command: "python run_pipeline.py"
