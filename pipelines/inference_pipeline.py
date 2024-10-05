@@ -12,9 +12,9 @@ def make_inference(df, configuration):
     try:
         # model name and version
         model_name = f"{config('ENVIRONMENT')}.{configuration.experiment_name}.{configuration.registered_model_name}"
-        alias = "current"
+
         # load model
-        model = mlflow.tensorflow.load_model(model_uri=f"models:/{model_name}@{alias}")
+        model = mlflow.tensorflow.load_model(model_uri=f"models:/{model_name}@{configuration.alias}")
         pred = model.predict(tf.expand_dims(tf.convert_to_tensor(df), axis=0)) 
 
         # get the class with highest probability

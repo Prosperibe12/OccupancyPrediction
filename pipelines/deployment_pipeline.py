@@ -2,15 +2,15 @@ import logging
 import mlflow 
 from decouple import config 
 
-def deployment_trigger(accuracy: float,config) -> bool:
+def deployment_trigger(accuracy: float, configuration) -> bool:
     """
     Implements a simple model deployment trigger that looks at the
     input model accuracy and compare with config accuracy
     """
-    return accuracy > config.min_accuracy 
+    return accuracy > configuration.min_accuracy 
 
 
-def continuous_deployment_pipeline(acc, run, configuration, alias="current"):
+def continuous_deployment_pipeline(acc, run, configuration):
     """ 
     Register the trained model and deploy if it meets the deployment minimum accuracy.
     Assign aliases dynamically ("current" and "previous") for model versions.
@@ -25,7 +25,7 @@ def continuous_deployment_pipeline(acc, run, configuration, alias="current"):
             client = mlflow.tracking.MlflowClient()
             try:
                 # check if any models already exist in the registry
-                latest_model_versions = client.get_model_version_by_alias(model_name, alias=alias)
+                latest_model_versions = client.get_model_version_by_alias(model_name, alias=configuration.alias)
                 if latest_model_versions:
                     # Reassign the "previous" alias to the current production model
                     current_version = latest_model_versions.version
@@ -39,8 +39,8 @@ def continuous_deployment_pipeline(acc, run, configuration, alias="current"):
                     )
 
                     # Assign the alias "current" to the new version
-                    client.set_registered_model_alias(model_name, alias, registered_model.version)
-                    logging.info(f"Model version {registered_model.version} set to '{alias}' alias.")
+                    client.set_registered_model_alias(model_name, configuration.alias, registered_model.version)
+                    logging.info(f"Model version {registered_model.version} set to '{configuration.alias}' alias.")
             except:
                 # create a new model for the first time
                 uri = f"runs:/{run.info.run_id}/model"
@@ -49,8 +49,8 @@ def continuous_deployment_pipeline(acc, run, configuration, alias="current"):
                     name=model_name
                 )
                 # Assign the alias "current" to the new version
-                client.set_registered_model_alias(model_name, alias, registered_model.version)
-                logging.info(f"Model version {registered_model.version} set to '{alias}' alias.")
+                client.set_registered_model_alias(model_name, configuration.alias, registered_model.version)
+                logging.info(f"Model version {registered_model.version} set to '{configuration.alias}' alias.")
 
         else:
             # If accuracy is below the threshold, raise an error

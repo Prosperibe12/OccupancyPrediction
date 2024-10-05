@@ -37,6 +37,7 @@ class TensorflowModel(Model):
             tf.keras.layers.Normalization(mean=np.mean(x_train, axis=0), variance=np.var(x_train, axis=0)),
             tf.keras.layers.Dense(40, activation='relu'),
             tf.keras.layers.Dense(32, activation='relu'),
+            tf.keras.layers.Dense(20, activation="relu"),
             tf.keras.layers.Dense(2, activation='softmax')  # corrected softmax
         ])
 
