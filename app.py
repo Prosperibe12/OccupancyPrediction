@@ -1,7 +1,10 @@
-from flask import Flask, request, jsonify
+import numpy as np
 import mlflow
 import tensorflow as tf
-import numpy as np 
+
+from decouple import config
+from flask import Flask, request, jsonify
+
 from src.config import Configparams
 
 app = Flask(__name__)
@@ -11,11 +14,13 @@ app = Flask(__name__)
 def load_model():
     
     # get configurations
-    config = Configparams()
-    model_name = config.registered_model_name
-    model_version = 9
-    model_uri = f"models:/{model_name}/{model_version}"
-    return mlflow.pyfunc.load_model(model_uri)
+    configuration = Configparams()
+
+    # load the champion version for the current environment
+    model_name = f"{config('ENVIRONMENT')}.{configuration.experiment_name}.{configuration.registered_model_name}"
+    
+    champion_version = mlflow.pyfunc.load_model(f"models:/{model_name}@{configuration.alias}")
+    return champion_version
 
 model = load_model()
 
@@ -24,13 +29,7 @@ def predict():
     try:
         # Get data from POST request
         data = request.json
-        print("Data", data) 
-
-        # get coonfig details
-        config = Configparams()
-        model_version = 9
-        model_uri = f"models:/{config.registered_model_name}/{model_version}"
-        model =  mlflow.pyfunc.load_model(model_uri)
+        print("Data", data)
 
         df = tf.convert_to_tensor(data, dtype=tf.float32)
         
@@ -49,4 +48,4 @@ def predict():
         return jsonify({"error": str(e)}), 500
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(host="127.0.0.1", port=8080, debug=True)
