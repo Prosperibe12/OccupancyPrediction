@@ -28,19 +28,31 @@ model = load_model()
 def predict():
     try:
         # Get data from POST request
-        data = request.json
-        print("Data", data)
+        data = request.get_json()
 
-        df = tf.convert_to_tensor(data, dtype=tf.float32)
+        # check if required parameters are present
+        required_features = ['temperature','humidity','light','co2']
+        if not all(features in data for features in required_features):
+            return jsonify({"error": "Missing required features"}), 400
         
-        # Make prediction
-        pred = model.predict(tf.expand_dims(df, axis=0))
-
+        # extract features from request data
+        input_data = [
+            data['temperature'],
+            data['humidity'],
+            data['light'],
+            data['co2']
+        ]
+        # convert to numpy array
+        np_data = np.array(input_data, dtype=np.float64).reshape(1,-1)
+        
+        # predict with model 
+        pred = model.predict(np_data)
+        
         # Get the class with highest probability
         if pred.shape[1] > 1:
             pred_value = int(pred.argmax(axis=1)[0])
         else:
-            pred_value = int(pred[0][0] > 0.5)  # Assuming binary classification
+            pred_value = int(pred[0][0] > 0.5)
 
         return jsonify({"prediction": pred_value})
 
