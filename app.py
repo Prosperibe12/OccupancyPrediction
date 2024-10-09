@@ -9,7 +9,7 @@ from src.config import Configparams
 
 app = Flask(__name__)
 
-
+mlflow.set_tracking_uri("http://127.0.0.1:6000")
 # Load the model at startup
 def load_model():
     
@@ -23,6 +23,10 @@ def load_model():
     return champion_version
 
 model = load_model()
+
+@app.route('/', methods=['GET'])
+def health_check():
+    return jsonify({"status": "OK"})
 
 @app.route('/predict', methods=['POST'])
 def predict():
@@ -60,4 +64,4 @@ def predict():
         return jsonify({"error": str(e)}), 500
 
 if __name__ == '__main__':
-    app.run(host="127.0.0.1", port=8080, debug=True)
+    app.run(host="0.0.0.0",port="8000",debug=True)

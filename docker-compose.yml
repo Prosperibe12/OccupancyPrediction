@@ -1,22 +1,10 @@
-version: '3'
-
 services:
-  flask-app:
+  app:
     build: .
-    container_name: flask-app
-    ports:
-      - "5000:5000"
-    environment:
-      - MLFLOW_TRACKING_URI=http://mlflow-server:5000
-    depends_on:
-      - mlflow-server
-
-  mlflow-server:
-    image: mlflow/mlflow:latest
-    container_name: mlflow-server
-    environment:
-      - MLFLOW_TRACKING_URI=http://0.0.0.0:5000
-    ports:
-      - "5001:5000"
     volumes:
-      - ./mlruns:/mlflow/mlruns
+      - .:/app  # Mount the current local directory to /app in the container
+    ports:
+      - "8001:8000"  # Flask port mapping
+      - "6001:6000"  # MLflow server port mapping
+    environment:
+      - FLASK_ENV=dev

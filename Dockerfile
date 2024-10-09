@@ -1,12 +1,18 @@
 FROM python:3.10.12
 
-COPY . /app 
+# Set the working directory
+WORKDIR /app
 
-WORKDIR  /app 
+# Copy the current directory contents into the container at /app
+COPY . /app
 
-RUN python3 -m venv /opt/venv 
+# Create a virtual environment
+RUN python3 -m venv /opt/venv
 
-RUN /opt/venv/bin/pip install pip --upgrade && \
-    /opt/venv/bin/pip install -r requirements.txt && chmod +x entrypoint.sh
+# Install dependencies using the virtual environment's pip
+RUN /opt/venv/bin/pip install --upgrade pip && \
+    /opt/venv/bin/pip install -r requirements.txt && \
+    chmod +x entrypoint.sh
 
-CMD ["/app/entrypoint.sh"]
+# Use the entrypoint script to run the app
+CMD [ "/app/entrypoint.sh" ]
