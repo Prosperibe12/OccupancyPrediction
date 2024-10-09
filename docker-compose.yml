@@ -8,3 +8,7 @@ services:
       - "6001:6000"  # MLflow server port mapping
     environment:
       - FLASK_ENV=dev
+    develop:
+      watch:
+        - action: rebuild
+          path: .
