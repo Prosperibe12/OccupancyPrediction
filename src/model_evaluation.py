@@ -69,62 +69,6 @@ class Accuracy(EvaluationStrategy):
 
         return accuracy
 
-class ConfusionMatrix(EvaluationStrategy):
-    """ 
-    Confusion Matrix Strategy for model evaluation
-    """
-    
-    def evaluate(self, model, x_test, y_test):
-        """ 
-        Evaluate model with Confusion Matrix
-        Args:
-            model: Trained model
-            x_test: Test dataset features
-            y_test: True labels for the test dataset
-
-        Returns:
-            cm: Confusion matrix of the model predictions
-        """
-        # Get the model predictions
-        y_pred = model.predict(x_test)
-
-        # If it's a classification model, convert probabilities to class predictions
-        if y_pred.shape[1] > 1:
-            y_pred = y_pred.argmax(axis=1)
-
-        # Calculate the confusion matrix
-        cm = confusion_matrix(y_test, y_pred)
-        # mlflow.log_artifact(cm)
-
-        return cm 
-    
-class ClassificationReport(EvaluationStrategy):
-    """ 
-    Classification Report Strategy for model evaluation
-    """
-    def evaluate(self, model, x_test, y_test):
-        """ 
-        Evaluate model with Classification Report
-        Args:
-            model: Trained model
-            x_test: Test dataset features
-            y_test: True labels for the test dataset
-
-        Returns:
-            report: Classification report of the model
-        """
-        # Get the model predictions
-        y_pred = model.predict(x_test)
-
-        # If it's a classification model, convert probabilities to class predictions
-        if y_pred.shape[1] > 1:
-            y_pred = y_pred.argmax(axis=1)
-
-        # Generate the classification report
-        report = classification_report(y_test, y_pred)
-        return report 
-    
-
 class ModelEvaluation:
 
     def __init__(self, strategy: EvaluationStrategy, model, x_test, y_test):
